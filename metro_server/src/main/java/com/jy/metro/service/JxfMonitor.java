@@ -8,7 +8,7 @@ package com.jy.metro.service;
 import com.jy.metro.util.WebServiceUtil;
 
 /**
- * Created by Saber on 2018/2/6.20:00
+ * Created by anson on 2018/2/6.20:00
  */
 public class JxfMonitor {
 
@@ -36,6 +36,8 @@ public class JxfMonitor {
 //        Vector soapParams = new Vector();
 //        // name, type, value, encoding style
 //        Parameter isbnParam = new Parameter("arg0",String.class, lineNumber,
+
+//        Parameter isbnParam1 = new Parameter("arg1",int.class, "7",
 //                null);
 ////        Parameter isbnParam1 = new Parameter("arg1",int.class, "7",
 ////                null);

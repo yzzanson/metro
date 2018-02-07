@@ -4,15 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jy.metro.bean.ConstructPlan;
 import com.jy.metro.service.JxfMonitor;
+import com.jy.metro.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -28,15 +26,21 @@ public class ConstructPushJob {
 
     /**
      * 每天9点执行一次
+     * 获取今天和昨天的所有所有
      * */
     @Scheduled(cron="0 0 9 * * *")
     public void remindConstruct() {
+        Long startTime = DateUtil.getDateEndDateTime(new Date()).getTime();
+        Long endTime = DateUtil.getDateEndDateTime(new Date()).getTime();
         String constructPushJob = JxfMonitor.casServer(ALL_LINE);
         JSONObject jsonObject = JSONObject.parseObject(constructPushJob);
         if(jsonObject.getString("resultCode").equals("00")){
             String jsonArrayStr1 = jsonObject.get("data").toString();
             List<ConstructPlan> constructPlanList = getListFromJsonArray(jsonArrayStr1);
             //解析
+            for (ConstructPlan constructPlan:constructPlanList){
+
+            }
 
         }
 
