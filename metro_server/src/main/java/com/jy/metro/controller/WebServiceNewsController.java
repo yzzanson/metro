@@ -1,7 +1,6 @@
 package com.jy.metro.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jy.metro.service.JxfMonitor;
 import com.jy.metro.util.DateUtil;
 import com.jy.metro.util.WebServiceUtil;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/news")
 public class WebServiceNewsController {
-
 
     /**
      * 获取新闻信息
@@ -43,20 +41,6 @@ public class WebServiceNewsController {
 
         String resultStr = WebServiceUtil.pushMethod("http://10.2.129.65:8018/NewsWebService.asmx", "GetNewsInfo", paramsMap);
         System.out.println(resultStr + "===============");
-
-        jsonData.put("result", 1);
-        jsonData.put("data", null);
-        jsonData.put("msg", "success");
-        return jsonData;
-    }
-
-    @ResponseBody
-    @RequestMapping("/getConstruction")
-    public JSONObject getConstruction() {
-        JSONObject jsonData = new JSONObject();
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("arg0", "all");
-        WebServiceUtil.pushMethod(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
 
         jsonData.put("result", 1);
         jsonData.put("data", null);
