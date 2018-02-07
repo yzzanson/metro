@@ -39,7 +39,7 @@ public class WebServiceNewsController {
         paramsMap.put("startDate", startDate == null ? DateUtil.getDateStartDateTime(currentDate) : startDate);
         paramsMap.put("endDate", endDate == null ? DateUtil.getDateEndDateTime(currentDate) : endDate);
 
-        String resultStr = WebServiceUtil.pushMethod("http://10.2.129.65:8018/NewsWebService.asmx", "getDataInfo", paramsMap);
+        String resultStr = WebServiceUtil.pushMethod("http://10.2.129.65:8018/NewsWebService.asmx", "GetNewsInfo", paramsMap);
         System.out.println(resultStr + "===============");
 
         jsonData.put("result", 1);
