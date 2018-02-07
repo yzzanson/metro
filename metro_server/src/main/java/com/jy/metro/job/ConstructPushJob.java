@@ -2,8 +2,13 @@ package com.jy.metro.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jy.dingtalk.SendMsgHelper;
+import com.jy.dingtalk.threadMsg.ThreadSendMsg;
 import com.jy.metro.bean.ConstructPlan;
+import com.jy.metro.bean.vo.TicketVO;
+import com.jy.metro.common.Constant;
 import com.jy.metro.service.JxfMonitor;
+import com.jy.metro.service.TicketService;
 import com.jy.metro.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,33 +29,53 @@ public class ConstructPushJob {
 
     private static final String ALL_LINE = "all";
 
+    private static final String MESSAGE_TITLE = "重大施工提醒计划";
+
     /**
      * 每天9点执行一次
      * 获取今天和昨天的所有所有
      * */
     @Scheduled(cron="0 0 9 * * *")
     public void remindConstruct() {
+        logger.info("施工推送开始...");
+
+        TicketService ticketService = new TicketService();
+        ticketService.refeshTicket();
+
         Long startTime = DateUtil.getDateEndDateTime(new Date()).getTime();
         Long endTime = DateUtil.getDateEndDateTime(new Date()).getTime();
         String constructPushJob = JxfMonitor.casServer(ALL_LINE);
         JSONObject jsonObject = JSONObject.parseObject(constructPushJob);
+        List<ConstructPlan> alarmPlan = new ArrayList<>();
         if(jsonObject.getString("resultCode").equals("00")){
             String jsonArrayStr1 = jsonObject.get("data").toString();
             List<ConstructPlan> constructPlanList = getListFromJsonArray(jsonArrayStr1);
             //解析
             for (ConstructPlan constructPlan:constructPlanList){
-
+                if(constructPlan.getPlanStartTime()>=startTime && constructPlan.getPlanStartTime()<=endTime){
+                    alarmPlan.add(constructPlan);
+                }
             }
-
         }
-
-        logger.info("施工推送开始...");
+        TicketVO ticketVO = (TicketVO) SendMsgHelper.localMap.get(Constant.TICKET_KEY);
+        for(ConstructPlan constructPlan:alarmPlan){
+            Map<String,Object> metroOAMap = buildSendMessageMap(constructPlan);
+            ThreadSendMsg threadSendMsg = new ThreadSendMsg(ticketVO,MESSAGE_TITLE,metroOAMap);
+            threadSendMsg.run();
+        }
         //查询需要重新统计数据的网吧Id列表
         logger.info("施工推送结束...");
     }
 
-    private Map<String,Object> buildSendMessageMap(String data){
-        return new HashMap<>();
+    private Map<String,Object> buildSendMessageMap(ConstructPlan constructPlan){
+        Map<String,Object> oaSendMap = new LinkedHashMap<>();
+        oaSendMap.put("线路名称:", constructPlan.getLineName());
+        oaSendMap.put("施工时间:", DateUtil.getDateFromLong(constructPlan.getPlanStartTime())+" - "+constructPlan.getPlanEndTime());
+        oaSendMap.put("申报单位:", constructPlan.getDeclareUnitName());
+        oaSendMap.put("施工单位:", constructPlan.getConstructionUnitName());
+        oaSendMap.put("施工内容:", constructPlan.getWorkContent());
+        oaSendMap.put("", "该施工计划已批复");
+        return oaSendMap;
     }
 
     public static List<ConstructPlan> getListFromJsonArray(String jsonArrayStr){

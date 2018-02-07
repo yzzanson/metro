@@ -23,11 +23,27 @@ public class WebServiceNewsController {
      * @date 2018/2/7 下午1:59
      */
     @ResponseBody
-    @RequestMapping("/getNewsInfo")
-    public JSONObject getNewsInfo() {
+     @RequestMapping("/getNewsInfo")
+     public JSONObject getNewsInfo() {
         JSONObject jsonData = new JSONObject();
 
         WebServiceUtil.pushMethod("http://10.2.129.65:8018/NewsWebService.asmx", "GetNewsInfo", null);
+
+        jsonData.put("result", 1);
+        jsonData.put("data", null);
+        jsonData.put("msg", "success");
+        return jsonData;
+    }
+
+    private static String REMOTE_ADDR = "http://10.201.1.1/services/in?wsdl";
+
+
+    @ResponseBody
+    @RequestMapping("/getConstruction")
+    public JSONObject getConstruction() {
+        JSONObject jsonData = new JSONObject();
+
+        WebServiceUtil.pushMethod(REMOTE_ADDR, "getConstructions", "all");
 
         jsonData.put("result", 1);
         jsonData.put("data", null);
