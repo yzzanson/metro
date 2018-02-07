@@ -7,6 +7,9 @@ package com.jy.metro.service;
 
 import com.jy.metro.util.WebServiceUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by anson on 2018/2/6.20:00
  */
@@ -15,7 +18,9 @@ public class JxfMonitor {
     private static String REMOTE_ADDR = "http://10.201.1.1/services/in?wsdl";
 
     public static String casServer(String lineNumber) {
-        return WebServiceUtil.pushMethod(REMOTE_ADDR, "getConstructions", lineNumber);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("arg0", lineNumber);
+        return WebServiceUtil.pushMethod(REMOTE_ADDR, "getConstructions", paramsMap);
 //        String endpoint = REMOTE_ADDR;
 //        URL url = null;
 //        try {

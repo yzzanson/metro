@@ -7,10 +7,10 @@ import org.apache.soap.rpc.Parameter;
 import org.apache.soap.rpc.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -23,7 +23,7 @@ public class WebServiceUtil {
 
     private static Logger logger = LoggerFactory.getLogger(WebServiceUtil.class);
 
-    public static String pushMethod(String webServiceUrl, String method, String lineNumber) {
+    public static String pushMethod(String webServiceUrl, String method, Map<String, Object> paramsMap) {
         //标识Web Service的具体路径
         URL url = null;
         try {
@@ -41,11 +41,14 @@ public class WebServiceUtil {
         // This is the name of the method on the above object
         soapCall.setMethodName(method);
         // We need to send the ISBN number as an input parameter to the method
-        if (!StringUtils.isEmpty(lineNumber)) {
+        if (!paramsMap.isEmpty()) {
             Vector soapParams = new Vector();
-            // name, type, value, encoding style
-            Parameter isbnParam = new Parameter("arg0", String.class, lineNumber, null);
-            soapParams.addElement(isbnParam);
+            for (String param : paramsMap.keySet()) {
+                // name, type, value, encoding style
+                Parameter isbnParam = new Parameter(param, String.class, paramsMap.get(param), null);
+                soapParams.addElement(isbnParam);
+            }
+
             // soapParams.addElement(isbnParam1);
             soapCall.setParams(soapParams);
         }
