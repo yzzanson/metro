@@ -29,17 +29,17 @@ public class WebServiceNewsController {
      */
     @ResponseBody
     @RequestMapping("/getNewsInfo")
-    public JSONObject getNewsInfo() {
+    public JSONObject getNewsInfo(Date startDate, Date endDate) {
         JSONObject jsonData = new JSONObject();
         Date currentDate = new Date();
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("user", "xxjsxt");
         paramsMap.put("password", "BCE486DD650A4fb388403AC15250541B");
         paramsMap.put("dataType", "xxjsPicNews");
-        paramsMap.put("startDate", DateUtil.getDateStartDateTime(currentDate));
-        paramsMap.put("endDate", DateUtil.getDateEndDateTime(currentDate));
+        paramsMap.put("startDate", startDate == null ? DateUtil.getDateStartDateTime(currentDate) : startDate);
+        paramsMap.put("endDate", endDate == null ? DateUtil.getDateEndDateTime(currentDate) : endDate);
 
-        String resultStr = WebServiceUtil.pushMethod("http://10.2.129.65:8018/NewsWebService.asmx", "GetNewsInfo", paramsMap);
+        String resultStr = WebServiceUtil.pushMethod("http://10.2.129.65:8018/NewsWebService.asmx", "getDataInfo", paramsMap);
         System.out.println(resultStr + "===============");
 
         jsonData.put("result", 1);
