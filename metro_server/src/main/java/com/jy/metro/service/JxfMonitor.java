@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class JxfMonitor {
 
-    private static String REMOTE_ADDR = "http://10.201.1.1/services/in?wsdl";
+    public static String REMOTE_ADDR = "http://10.201.1.1/services/in?wsdl";
 
     public static String casServer(String lineNumber) {
         Map<String, Object> paramsMap = new HashMap<>();
