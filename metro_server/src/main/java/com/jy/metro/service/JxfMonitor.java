@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.Vector;
 
 /**
- * Created by Saber on 2018/2/6.20:00
+ * Created by anson on 2018/2/6.20:00
  */
 public class JxfMonitor {
 
@@ -38,7 +38,7 @@ public class JxfMonitor {
         // This is the remote object we're asking for the price
         soapCall.setTargetObjectURI("urn:xmethods-caSynrochnized");
         // This is the name of the method on the above object
-        soapCall.setMethodName("getConstruction");
+        soapCall.setMethodName("getConstructions");
         // We need to send the ISBN number as an input parameter to the method
         Vector soapParams = new Vector();
         // name, type, value, encoding style
