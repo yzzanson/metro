@@ -1,6 +1,8 @@
 package com.example.domtest;
 
 
+import com.jy.metro.bean.NewsEntity;
+import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -15,13 +17,21 @@ public class DocumentParserTest {
 
     private static void parseDocument(String xmlStr) throws ParserConfigurationException {
         org.dom4j.Document  document =null;
+        Document doc = null;
         try {
-            document= DocumentHelper.parseText(xmlStr);
-            Element rootElement=document.getRootElement();
-            Element fooElement;
-            for(Iterator i=rootElement.element("datas").elementIterator("data");i.hasNext();){
-                System.out.println("--------------------------------------");
-                fooElement = (Element)i.next();
+            // 读取并解析XML文档
+            // SAXReader就是一个管道，用一个流的方式，把xml文件读出来
+            // SAXReader reader = new SAXReader(); //User.hbm.xml表示你要解析的xml文档
+            // Document document = reader.read(new File("User.hbm.xml"));
+            // 下面的是通过解析xml字符串的
+            doc = DocumentHelper.parseText(xmlStr); // 将字符串转为XML
+            Element rootElt = doc.getRootElement(); // 获取根节点
+            System.out.println("根节点：" + rootElt.getName()); // 拿到根节点的名称
+            Iterator iter = rootElt.element("datas").elementIterator("data"); // 获取根节点下的子节点head
+            // 遍历head节点
+            while (iter.hasNext()) {
+                NewsEntity newsEntity = new NewsEntity();
+                Element fooElement = (Element) iter.next();
                 System.out.println("id："+fooElement.elementText("id"));
                 System.out.println("totle："+fooElement.elementText("title"));
                 System.out.println("content："+fooElement.elementText("content"));
