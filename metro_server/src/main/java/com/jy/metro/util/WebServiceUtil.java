@@ -59,11 +59,13 @@ public class WebServiceUtil {
             // Check to see if there is an error, return "N/A"
             if (soapResponse.generatedFault()) {
                 Fault fault = soapResponse.getFault();
+                logger.info("错误:"+fault.getFaultString());
                 return fault.getFaultString();
             } else {
                 // read result
                 Parameter soapResult = soapResponse.getReturnValue();
                 // get a string from the result
+                logger.info(method+"请求结果:"+soapResult.getValue().toString());
                 return soapResult.getValue().toString();
             }
         } catch (Exception se) {
