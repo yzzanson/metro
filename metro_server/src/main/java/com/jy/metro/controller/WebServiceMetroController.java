@@ -22,7 +22,7 @@ import java.util.Map;
  * @create 2018-02-07 下午9:13
  **/
 @Controller
-@RequestMapping("/metro")
+@RequestMapping("/construct")
 public class WebServiceMetroController {
 
 
