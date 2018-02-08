@@ -29,13 +29,37 @@ public class WebServiceMetroController {
 
 
     @ResponseBody
-    @RequestMapping("/getConstruction")
-    public JSONObject getConstruction() {
-        JSONObject jsonData = new JSONObject();
+    @RequestMapping("/getConstruction_test")
+    public JSONObject getConstruction_test() {
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("arg0", "all");
-        Long startTime = DateUtil.getDateEndDateTime(new Date()).getTime();
-        Long endTime = DateUtil.getDateEndDateTime(new Date()).getTime();
+        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
+        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
+        String result = WebServiceUtil.pushMethod(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        List<ConstructPlan> alarmPlan = new ArrayList<>();
+        if(jsonObject.getString("resultCode").equals("00")){
+            String jsonArrayStr1 = jsonObject.get("data").toString();
+            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
+            //解析
+//            for (ConstructPlan constructPlan:constructPlanList){
+//                if(constructPlan.getPlanStartTime()>=startTime && constructPlan.getPlanStartTime()<=endTime){
+//                    alarmPlan.add(constructPlan);
+//                }
+//            }
+            alarmPlan= constructPlanList;
+        }
+        return ResultJson.succResultJson(alarmPlan);
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/getConstruction")
+    public JSONObject getConstruction() {
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("arg0", "all");
+        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
+        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
         String result = WebServiceUtil.pushMethod(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();

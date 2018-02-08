@@ -12,6 +12,7 @@ import java.util.Date;
 public class DateUtil {
 
     public static final String FORMATER_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMATER_YYYY_MM_DD_HH_MM_SS2 = "yyyyMMddHHmm";
 
     /**
      * 获取指定日期的前一天开始时间
@@ -99,9 +100,18 @@ public class DateUtil {
         return formatter.format(new Date(longTime));
     }
 
+    public static Long getStringDateFromDate(Date date){
+        if(date==null) return null;
+        DateFormat formatter = new SimpleDateFormat(FORMATER_YYYY_MM_DD_HH_MM_SS2);
+        return Long.parseLong(formatter.format(date));
+    }
+
 
     public static void main(String[] args) {
-
+        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
+        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
+        System.out.println(startTime);
+        System.out.println(endTime);
     }
 
 }

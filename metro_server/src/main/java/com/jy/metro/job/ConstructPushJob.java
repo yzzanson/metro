@@ -35,15 +35,16 @@ public class ConstructPushJob {
      * 每天9点执行一次
      * 获取今天和昨天的所有所有
      * */
-    @Scheduled(cron="0 0 9 * * *")
+//    @Scheduled(cron="0 0 9 * * *")
+    @Scheduled(cron="0 0 9/1 * * ?")
     public void remindConstruct() {
         logger.info("施工推送开始...");
 
         TicketService ticketService = new TicketService();
         ticketService.refeshTicket();
 
-        Long startTime = DateUtil.getDateEndDateTime(new Date()).getTime();
-        Long endTime = DateUtil.getDateEndDateTime(new Date()).getTime();
+        Long startTime = DateUtil.getStringDateFromDate(new Date());
+        Long endTime = DateUtil.getStringDateFromDate(new Date());
         String constructPushJob = JxfMonitor.casServer(ALL_LINE);
         JSONObject jsonObject = JSONObject.parseObject(constructPushJob);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
