@@ -99,9 +99,9 @@ public class WebServiceMetroController {
         String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getHistoryConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         if(jsonObject.getString("resultCode").equals("00")){
-            String jsonArrayStr1 = jsonObject.get("data").toString();
-            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
-            return ResultJson.succResultJson(constructPlanList);
+//            String jsonArrayStr1 = jsonObject.get("data").toString();
+//            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
+            return jsonObject;
         }
         return ResultJson.errorResultJson("");
     }

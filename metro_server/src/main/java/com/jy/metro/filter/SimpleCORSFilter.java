@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /**
  * CORS过滤器
- * Created by Saber on 16/4/25.
+ * Created by anson on 18/2/8.
  */
 @Component
 public class SimpleCORSFilter implements Filter {
