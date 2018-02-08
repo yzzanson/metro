@@ -86,4 +86,18 @@ public class OaMsgEntity implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	@Override
+	public String toString() {
+		return "OaMsgEntity{" +
+				"id=" + id +
+				", errCode=" + errCode +
+				", errMsg='" + errMsg + '\'' +
+				", invalidUser='" + invalidUser + '\'' +
+				", invalidParty='" + invalidParty + '\'' +
+				", messageId='" + messageId + '\'' +
+				", createdAt=" + createdAt +
+				", content='" + content + '\'' +
+				'}';
+	}
 }
