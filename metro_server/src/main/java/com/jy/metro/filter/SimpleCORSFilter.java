@@ -3,7 +3,6 @@ package com.jy.metro.filter;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -14,14 +13,7 @@ import java.io.IOException;
 @Component
 public class SimpleCORSFilter implements Filter {
 
-    public final static String a = "a.taofairy.com";
-    public final static String b = "b.taofairy.com";
-    public final static String c = "s.taofairy.com";
-    public final static String d = "yfl.taofairy.com";
-    public final static String e = "yfl2.taofairy.com";
-
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request =(HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
         response.setHeader("Access-Control-Allow-Origin", "*");
