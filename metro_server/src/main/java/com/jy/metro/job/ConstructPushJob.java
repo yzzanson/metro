@@ -35,8 +35,8 @@ public class ConstructPushJob {
      * 每天9点执行一次
      * 获取今天和昨天的所有所有
      * */
-//    @Scheduled(cron="0 0 9 * * *")
-    @Scheduled(cron="0 0/10 * * * ?")
+    @Scheduled(cron="0 0 9 * * *")
+//    @Scheduled(cron="0 0/10 * * * ?")
     public void remindConstruct() {
         logger.info("施工推送开始...");
 
@@ -68,7 +68,7 @@ public class ConstructPushJob {
         logger.info("施工推送结束...");
     }
 
-    private Map<String,Object> buildSendMessageMap(ConstructPlan constructPlan){
+    public Map<String,Object> buildSendMessageMap(ConstructPlan constructPlan){
         Map<String,Object> oaSendMap = new LinkedHashMap<>();
         oaSendMap.put("线路名称:", constructPlan.getLineName());
         oaSendMap.put("施工时间:", DateUtil.getDateFromLong(constructPlan.getPlanStartTime())+" - "+constructPlan.getPlanEndTime());

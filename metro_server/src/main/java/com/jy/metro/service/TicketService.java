@@ -8,9 +8,11 @@ import com.jy.metro.common.Constant;
 import com.jy.metro.util.DateUtil;
 import com.jy.metro.util.ResultJson;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -18,6 +20,9 @@ import java.util.Properties;
  * Created by anson on 18/2/7.
  */
 public class TicketService {
+
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(TicketService.class.getCanonicalName());
+
 
     public JSONObject refeshTicket(){
         Map<String,Object> localTicketMap = SendMsgHelper.localMap;
@@ -60,6 +65,7 @@ public class TicketService {
             ticketvo.setTicket(ticket);
             //执行更新
             ticketvo.setUpdatedAt(DateUtil.getCurrentTime());
+            logger.info("刷新ticket,更新后的数据:corpid:"+ticketvo.getCorpId()+"   corpSecrect:"+ticketvo.getSecrect()+"    更新时间:"+new Date() + "     更新后token:"+accessToken);
             SendMsgHelper.localMap.put(Constant.TICKET_KEY, ticketvo);
             return ticketvo;
         } catch (Exception e) {

@@ -55,18 +55,18 @@ public class SendMsgHelper {
         if (StringUtils.isNotEmpty(config.getDepartmentId())) {
             message.setToParty(config.getDepartmentId());
         }
-        logger.debug("获取钉钉企业配置：" + config.toString());
-        OaMsgEntity msgEntity = null;
+        System.out.println("获取钉钉企业配置：" + config.toString());
+                OaMsgEntity msgEntity = null;
         try {
             msgEntity = AuthHelper.sendOAReturn(message);
-            logger.info("钉消息发送结果:", msgEntity.toString());
+            System.out.println("钉消息发送结果:"+ msgEntity.toString());
             json.put("result", 0);
             json.put("msg", "发送成功");
             json.put("data", msgEntity);
             return json;
         } catch (Exception e) {
-            logger.error("发送钉钉企业消息失败：" + e.getMessage());
-            e.printStackTrace();
+            System.out.println("发送钉钉企业消息失败：" + e.getMessage());
+                    e.printStackTrace();
             json.put("result", 1);
             json.put("msg", e.getMessage());
             json.put("data", msgEntity);
@@ -74,5 +74,7 @@ public class SendMsgHelper {
         }
 
     }
+
+
 
 }

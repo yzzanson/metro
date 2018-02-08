@@ -2,13 +2,13 @@ package com.jy.metro.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jy.dingtalk.SendMsgHelper;
+import com.jy.dingtalk.threadMsg.ThreadSendMsg2;
 import com.jy.metro.bean.ConstructPlan;
 import com.jy.metro.bean.vo.TicketVO;
 import com.jy.metro.common.Constant;
 import com.jy.metro.job.ConstructPushJob;
 import com.jy.metro.service.JxfMonitor;
 import com.jy.metro.service.TicketService;
-import com.jy.metro.util.DateUtil;
 import com.jy.metro.util.ResultJson;
 import com.jy.metro.util.WebServiceUtil;
 import org.apache.commons.lang.StringUtils;
@@ -37,7 +37,7 @@ public class WebServiceMetroController {
         String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
-        if(jsonObject.getString("resultCode").equals("00")){
+        if (jsonObject.getString("resultCode").equals("00")) {
             String jsonArrayStr1 = jsonObject.get("data").toString();
             List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
             //解析
@@ -46,7 +46,7 @@ public class WebServiceMetroController {
 //                    alarmPlan.add(constructPlan);
 //                }
 //            }
-            alarmPlan= constructPlanList;
+            alarmPlan = constructPlanList;
         }
         return ResultJson.succResultJson(alarmPlan);
     }
@@ -54,51 +54,44 @@ public class WebServiceMetroController {
     /**
      * 获取线路对应的的数据
      * 线路为空则取全部
-     * */
+     */
     @ResponseBody
     @RequestMapping("/getConstruction")
     public JSONObject getConstruction(String line) {
         Map<String, Object> paramsMap = new HashMap<>();
-        if(StringUtils.isEmpty(line)){
+        if (StringUtils.isEmpty(line)) {
             line = "all";
         }
         paramsMap.put("arg0", line);
-        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
-        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
+//        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
+//        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
         String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
-        if(jsonObject.getString("resultCode").equals("00")){
+        if (jsonObject.getString("resultCode").equals("00")) {
             String jsonArrayStr1 = jsonObject.get("data").toString();
-            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
-            //解析
-            for (ConstructPlan constructPlan:constructPlanList){
-                if(constructPlan.getPlanStartTime()>=startTime && constructPlan.getPlanStartTime()<=endTime){
-                    alarmPlan.add(constructPlan);
-                }
-            }
+            alarmPlan = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
         }
         return ResultJson.succResultJson(alarmPlan);
     }
 
 
-
     /**
      * 获取线路对应的的数据
      * 线路为空则取全部
-     * */
+     */
     @ResponseBody
     @RequestMapping("/getHistoryConstructions")
-    public JSONObject getHistoryConstructions (String line,int pageNum) {
+    public JSONObject getHistoryConstructions(String line, int pageNum) {
         Map<String, Object> paramsMap = new LinkedHashMap<>();
-        if(StringUtils.isNotEmpty(line)){
+        if (StringUtils.isNotEmpty(line)) {
             line = "all";
         }
         paramsMap.put("arg0", line);
         paramsMap.put("arg1", pageNum);
         String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getHistoryConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
-        if(jsonObject.getString("resultCode").equals("00")){
+        if (jsonObject.getString("resultCode").equals("00")) {
 //            String jsonArrayStr1 = jsonObject.get("data").toString();
 //            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
             return jsonObject;
@@ -118,6 +111,34 @@ public class WebServiceMetroController {
     public JSONObject refreshToken() {
         TicketService ticketService = new TicketService();
         return ticketService.refeshTicket();
+    }
+
+    @ResponseBody
+    @RequestMapping("/send")
+    public JSONObject sengMessageTest() {
+        String constructPushJob = JxfMonitor.casServer("all");
+        JSONObject jsonObject = JSONObject.parseObject(constructPushJob);
+        List<ConstructPlan> alarmPlan = new ArrayList<>();
+        if (jsonObject.getString("resultCode").equals("00")) {
+            String jsonArrayStr1 = jsonObject.get("data").toString();
+            System.out.println("重大施工OA内容测试:" + jsonArrayStr1);
+            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
+            //解析
+            for (ConstructPlan constructPlan : constructPlanList) {
+                alarmPlan.add(constructPlan);
+            }
+        }
+        TicketService ticketService = new TicketService();
+        ticketService.refeshTicket();
+        TicketVO ticketVO = (TicketVO) SendMsgHelper.localMap.get(Constant.TICKET_KEY);
+        for (ConstructPlan constructPlan : alarmPlan) {
+            System.out.println("当前的sonstructPlan为:"+constructPlan.toString());
+            ConstructPushJob cjob = new ConstructPushJob();
+            Map<String, Object> metroOAMap = cjob.buildSendMessageMap(constructPlan);
+            ThreadSendMsg2 threadSendMsg = new ThreadSendMsg2(ticketVO, "重大施工提醒计划", metroOAMap);
+            threadSendMsg.run();
+        }
+        return ResultJson.succResultJson(alarmPlan);
     }
 
 }

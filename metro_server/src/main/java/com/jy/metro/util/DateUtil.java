@@ -98,8 +98,16 @@ public class DateUtil {
 
     public static String getDateFromLong(Long longTime){
         if(longTime==null) return null;
-        DateFormat formatter = new SimpleDateFormat(FORMATER_YYYY_MM_DD_HH_MM_SS);
-        return formatter.format(new Date(longTime));
+        String time = String.valueOf(longTime);
+        String resultTime = "";
+        if(time.length()==12){
+            resultTime += time.substring(0, 4)+"-"+time.substring(4, 6)+"-"+time.substring(6, 8)+" "+time.substring(8, 10)+":"+time.substring(10, 12);
+        }else if(time.length()<12 && time.length()>10){
+            resultTime += time.substring(0, 4)+"-"+time.substring(4, 6)+"-"+time.substring(6, 8)+" "+time.substring(8, 10)+":"+time.substring(10, time.length() - 1);
+        }else if(time.length()<10 && time.length()>8){
+            resultTime += time.substring(0, 4)+"-"+time.substring(4, 6)+"-"+time.substring(6,8)+" "+time.substring(8, 10);
+        }
+        return resultTime;
     }
 
     public static Long getStringDateFromDate(Date date){
@@ -121,10 +129,19 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
-        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
-        System.out.println(startTime);
-        System.out.println(endTime);
+//        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
+//        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
+//        System.out.println(startTime);
+//        System.out.println(endTime);
+
+        long longTIme = 201802051200L;
+        String time = String.valueOf(longTIme);
+        String resultTime = "";
+        System.out.println(time.substring(0, 4));
+        System.out.println(time.substring(4, 6));
+        System.out.println(time.substring(6, 8));
+        System.out.println(time.substring(8, 10));
+        System.out.println(time.substring(10, 12));
     }
 
 }
