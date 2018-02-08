@@ -1,6 +1,5 @@
 package com.jy.metro.util;
 
-
 import com.jy.metro.bean.NewsEntity;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -29,29 +28,24 @@ public class XmlParseUtil {
             doc = DocumentHelper.parseText(xml); // 将字符串转为XML
             Element rootElt = doc.getRootElement(); // 获取根节点
             System.out.println("根节点：" + rootElt.getName()); // 拿到根节点的名称
-            Iterator iter = rootElt.elementIterator("datas"); // 获取根节点下的子节点head
+            Iterator iter = rootElt.element("datas").elementIterator("data"); // 获取根节点下的子节点head
             // 遍历head节点
             while (iter.hasNext()) {
                 NewsEntity newsEntity = new NewsEntity();
                 Element recordEle = (Element) iter.next();
-                Iterator iters = recordEle.elementIterator("data"); // 获取子节点head下的子节点script
-                // 遍历Header节点下的Response节点
-                while (iters.hasNext()) {
-                    Element itemEle = (Element) iters.next();
-                    newsEntity.setId(itemEle.elementTextTrim("id"));
-                    newsEntity.setTitle(itemEle.elementTextTrim("title"));
-                    newsEntity.setContent(itemEle.elementTextTrim("content"));
-                    newsEntity.setKeyWords(itemEle.elementTextTrim("keyWords"));
-                    newsEntity.setSource(itemEle.elementTextTrim("source"));
-                    newsEntity.setSeq(itemEle.elementTextTrim("seq"));
-                    newsEntity.setSecret(itemEle.elementTextTrim("secret"));
-                    newsEntity.setFocusFlag(itemEle.elementTextTrim("focusFlag"));
-                    newsEntity.setSubject(itemEle.elementTextTrim("subject"));
-                    newsEntity.setPicPath(itemEle.elementTextTrim("picPath"));
-                    newsEntity.setPubDate(itemEle.elementTextTrim("pubDate"));
+                newsEntity.setId(recordEle.elementTextTrim("id"));
+                newsEntity.setTitle(recordEle.elementTextTrim("title"));
+                newsEntity.setContent(recordEle.elementTextTrim("content"));
+                newsEntity.setKeyWords(recordEle.elementTextTrim("keyWords"));
+                newsEntity.setSource(recordEle.elementTextTrim("source"));
+                newsEntity.setSeq(recordEle.elementTextTrim("seq"));
+                newsEntity.setSecret(recordEle.elementTextTrim("secret"));
+                newsEntity.setFocusFlag(recordEle.elementTextTrim("focusFlag"));
+                newsEntity.setSubject(recordEle.elementTextTrim("subject"));
+                newsEntity.setPicPath(recordEle.elementTextTrim("picPath"));
+                newsEntity.setPubDate(recordEle.elementTextTrim("pubDate"));
 
-                    newsEntityList.add(newsEntity);
-                }
+                newsEntityList.add(newsEntity);
             }
         } catch (DocumentException e) {
             e.printStackTrace();
