@@ -18,7 +18,7 @@ public class JxfMonitor {
     public static String REMOTE_ADDR = "http://10.201.1.1/services/in?wsdl";
 
     public static String casServer(String lineNumber) {
-        Map<String, String> paramsMap = new HashMap<>();
+        Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("arg0", lineNumber);
         return WebServiceUtil.push(REMOTE_ADDR, "getConstructions", paramsMap);
     }

@@ -36,7 +36,7 @@ public class ConstructPushJob {
      * 获取今天和昨天的所有所有
      * */
 //    @Scheduled(cron="0 0 9 * * *")
-    @Scheduled(cron="0 0 9/1 * * ?")
+    @Scheduled(cron="0 0/10 * * * ?")
     public void remindConstruct() {
         logger.info("施工推送开始...");
 

@@ -32,10 +32,8 @@ public class WebServiceMetroController {
     @ResponseBody
     @RequestMapping("/getConstruction_test")
     public JSONObject getConstruction_test() {
-        Map<String, String> paramsMap = new HashMap<>();
+        Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("arg0", "all");
-        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
-        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
         String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
@@ -60,7 +58,7 @@ public class WebServiceMetroController {
     @ResponseBody
     @RequestMapping("/getConstruction")
     public JSONObject getConstruction(String line) {
-        Map<String, String> paramsMap = new HashMap<>();
+        Map<String, Object> paramsMap = new HashMap<>();
         if(StringUtils.isEmpty(line)){
             line = "all";
         }
@@ -91,8 +89,8 @@ public class WebServiceMetroController {
      * */
     @ResponseBody
     @RequestMapping("/getHistoryConstructions")
-    public JSONObject getHistoryConstructions (String line,String pageNum) {
-        Map<String, String> paramsMap = new LinkedHashMap<>();
+    public JSONObject getHistoryConstructions (String line,int pageNum) {
+        Map<String, Object> paramsMap = new LinkedHashMap<>();
         if(StringUtils.isNotEmpty(line)){
             line = "all";
         }
@@ -100,11 +98,10 @@ public class WebServiceMetroController {
         paramsMap.put("arg1", pageNum);
         String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getHistoryConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
-        List<ConstructPlan> alarmPlan = new ArrayList<>();
         if(jsonObject.getString("resultCode").equals("00")){
             String jsonArrayStr1 = jsonObject.get("data").toString();
             List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
-            return ResultJson.succResultJson(alarmPlan);
+            return ResultJson.succResultJson(constructPlanList);
         }
         return ResultJson.errorResultJson("");
     }

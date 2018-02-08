@@ -33,7 +33,7 @@ public class WebServiceNewsController {
     public JSONObject getNewsInfo(String startDate, String endDate) {
         JSONObject jsonData = new JSONObject();
         Date currentDate = new Date();
-        Map<String, String> paramsMap = new LinkedHashMap<>();
+        Map<String, Object> paramsMap = new LinkedHashMap<>();
         paramsMap.put("user", "xxjsxt");
         paramsMap.put("password", "BCE486DD650A4fb388403AC15250541B");
         paramsMap.put("dataType", "xxjsPicNews");
@@ -55,7 +55,7 @@ public class WebServiceNewsController {
     @ResponseBody
     @RequestMapping("/getInfo")
     public JSONObject getInfo(){
-        Map<String, String> paramsMap = new HashMap<>();
+        Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("arg0",  "all");
         String s =  WebServiceUtil.push("http://10.201.1.1/services/in?wsdl", "getConstructions", paramsMap);
         JSONObject jsonData = new JSONObject();
