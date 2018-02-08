@@ -131,12 +131,15 @@ public class WebServiceMetroController {
         TicketService ticketService = new TicketService();
         ticketService.refeshTicket();
         TicketVO ticketVO = (TicketVO) SendMsgHelper.localMap.get(Constant.TICKET_KEY);
-        for (ConstructPlan constructPlan : alarmPlan) {
-            System.out.println("当前的sonstructPlan为:"+constructPlan.toString());
-            ConstructPushJob cjob = new ConstructPushJob();
-            Map<String, Object> metroOAMap = cjob.buildSendMessageMap(constructPlan);
-            ThreadSendMsg2 threadSendMsg = new ThreadSendMsg2(ticketVO, "重大施工提醒计划", metroOAMap);
-            threadSendMsg.run();
+        for (int i=0;i<alarmPlan.size();i++) {
+            if(i==0) {
+                ConstructPlan constructPlan = alarmPlan.get(i);
+                System.out.println("当前的sonstructPlan为:" + constructPlan.toString());
+                ConstructPushJob cjob = new ConstructPushJob();
+                Map<String, Object> metroOAMap = cjob.buildSendMessageMap(constructPlan);
+                ThreadSendMsg2 threadSendMsg = new ThreadSendMsg2(ticketVO, "重大施工提醒计划", metroOAMap);
+                threadSendMsg.run();
+            }
         }
         return ResultJson.succResultJson(alarmPlan);
     }

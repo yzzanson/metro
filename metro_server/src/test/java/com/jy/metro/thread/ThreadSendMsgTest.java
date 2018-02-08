@@ -1,7 +1,7 @@
 package com.jy.metro.thread;
 
 import com.jy.dingtalk.helper.AuthHelper;
-import com.jy.dingtalk.threadMsg.ThreadSendMsg;
+import com.jy.dingtalk.threadMsg.ThreadSendMsg2;
 import com.jy.metro.bean.vo.TicketVO;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class ThreadSendMsgTest {
         String departmentid = "59828702";
         try {
             String accessToken = AuthHelper.getAccessToken(corpid, corp_secrect);
-            System.out.println("accessToken:"+accessToken);
+            System.out.println("accessToken:" + accessToken);
             TicketVO ticketVO = new TicketVO();
             ticketVO.setUpdatedAt(new Date());
             ticketVO.setAgentId(agentid);
@@ -31,7 +31,7 @@ public class ThreadSendMsgTest {
             ticketVO.setDepartmentId(departmentid);
             ticketVO.setAccessToken(accessToken);
             Map<String, Object> oaMap = buildSendMessageMap();
-            ThreadSendMsg threadSendMsg = new ThreadSendMsg(ticketVO,"重大施工提醒计划",oaMap);
+            ThreadSendMsg2 threadSendMsg = new ThreadSendMsg2(ticketVO,"重大施工提醒计划",oaMap);
             threadSendMsg.run();
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class ThreadSendMsgTest {
     private Map<String, Object> buildSendMessageMap() {
         Map<String, Object> oaSendMap = new LinkedHashMap<>();
         oaSendMap.put("线路名称:", "杭州地铁二号线");
-        oaSendMap.put("施工时间:", "2018-02-06 00:00:00 -  2018-02-07 01:22:00");
+        oaSendMap.put("施工时间:", "2018-02-06 00:00:00 -  2018-02-07 02:22:00");
         oaSendMap.put("申报单位:", "杭州市规划局");
         oaSendMap.put("施工单位:", "杭州地铁二建");
         oaSendMap.put("施工内容:", "学院路口段到武林广场段打通");
