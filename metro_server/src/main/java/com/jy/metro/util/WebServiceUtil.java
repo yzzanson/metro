@@ -1,17 +1,19 @@
 package com.jy.metro.util;
 
-import org.apache.soap.Constants;
-import org.apache.soap.Fault;
-import org.apache.soap.rpc.Call;
-import org.apache.soap.rpc.Parameter;
-import org.apache.soap.rpc.Response;
+//import org.apache.axis.client.Call;
+
+import org.apache.axis.client.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+import javax.xml.rpc.encoding.XMLType;
 import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * WebServiceUtil
@@ -23,54 +25,37 @@ public class WebServiceUtil {
 
     private static Logger logger = LoggerFactory.getLogger(WebServiceUtil.class);
 
-    public static String pushMethod(String webServiceUrl, String method, Map<String, Object> paramsMap) {
-        //标识Web Service的具体路径
-        URL url = null;
+    public static String push(String webServiceUrl, String method, Map<String, String> paramsMap){
+        String qName ="http://tempuri.org/";
+        String result = null;
         try {
-            url = new URL(webServiceUrl);
-        } catch (MalformedURLException mue) {
-            logger.error("创建url失败,", mue);
-            return mue.getMessage();
-        }
-        // This is the main SOAP object
-        Call soapCall = new Call();
-        // Use SOAP encoding
-        soapCall.setEncodingStyleURI(Constants.NS_URI_SOAP_ENC);
-        // This is the remote object we're asking for the price
-        soapCall.setTargetObjectURI("urn:xmethods-caSynrochnized");
-        // This is the name of the method on the above object
-        soapCall.setMethodName(method);
-        // We need to send the ISBN number as an input parameter to the method
-        if (!paramsMap.isEmpty()) {
-            Vector soapParams = new Vector();
+            //直接引用远程的wsdl文件
+            //以下都是套路
+            Service service = new Service();
+            org.apache.axis.client.Call call = (org.apache.axis.client.Call) service.createCall();
+            call.setTargetEndpointAddress(new URL(webServiceUrl));
+            call.setUseSOAPAction(true);
+            call.setReturnType(org.apache.axis.encoding.XMLType.XSD_STRING);//设置返回类型
+            call.setOperationName(new QName(qName,method));//WSDL里面描述的接口名称
+             /*    JAVA调用NET 报服务器未能识别 HTTP 头 SOAPAction 的值,遇到这种问题时,是因为没有设SOAPAction
+              的值,加上这行代码就可以call.setSOAPActionURI("http://tempuri.org/getLocalJson"),注意后面的Add方法哦,是方法名,一定要带哦*/
+            String path = qName + method;
+            call.setSOAPActionURI(path);
+            List<String> paramList = new ArrayList<>();
             for (String param : paramsMap.keySet()) {
-                // name, type, value, encoding style
-                Parameter isbnParam = new Parameter(param, String.class, paramsMap.get(param), null);
-                soapParams.addElement(isbnParam);
+                call.addParameter(new QName(qName,param), XMLType.XSD_STRING, ParameterMode.IN);
+                paramList.add((String)paramsMap.get(param));
             }
 
-            // soapParams.addElement(isbnParam1);
-            soapCall.setParams(soapParams);
+            result = (String)call.invoke(paramList.toArray());
+        } catch (RemoteException e) {
+            // TODO Auto-generated catch block
+            logger.error(webServiceUrl + "RemoteException,", e);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            logger.error(webServiceUrl + "发送失败,", e);
         }
-
-        try {
-            // Invoke the remote method on the object
-            Response soapResponse = soapCall.invoke(url, "");
-            // Check to see if there is an error, return "N/A"
-            if (soapResponse.generatedFault()) {
-                Fault fault = soapResponse.getFault();
-                logger.info("错误:"+fault.getFaultString());
-                return fault.getFaultString();
-            } else {
-                // read result
-                Parameter soapResult = soapResponse.getReturnValue();
-                // get a string from the result
-                logger.info(method+"请求结果:"+soapResult.getValue().toString());
-                return soapResult.getValue().toString();
-            }
-        } catch (Exception se) {
-            logger.error(webServiceUrl + "发送失败,", se);
-            return se.getMessage();
-        }
+        return result;
     }
+
 }

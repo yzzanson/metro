@@ -149,6 +149,47 @@
 			<version>2.6</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
+		<dependency>
+			<groupId>org.dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.axis2/axis2-kernel -->
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-kernel</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.axis2/axis2-adb-codegen -->
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-adb-codegen</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transport-local</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transport-http</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis-jaxrpc</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

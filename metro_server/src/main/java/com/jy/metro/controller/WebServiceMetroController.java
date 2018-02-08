@@ -32,11 +32,11 @@ public class WebServiceMetroController {
     @ResponseBody
     @RequestMapping("/getConstruction_test")
     public JSONObject getConstruction_test() {
-        Map<String, Object> paramsMap = new HashMap<>();
+        Map<String, String> paramsMap = new HashMap<>();
         paramsMap.put("arg0", "all");
         Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
         Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
-        String result = WebServiceUtil.pushMethod(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
+        String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
         if(jsonObject.getString("resultCode").equals("00")){
@@ -60,14 +60,14 @@ public class WebServiceMetroController {
     @ResponseBody
     @RequestMapping("/getConstruction")
     public JSONObject getConstruction(String line) {
-        Map<String, Object> paramsMap = new HashMap<>();
-        if(StringUtils.isNotEmpty(line)){
+        Map<String, String> paramsMap = new HashMap<>();
+        if(StringUtils.isEmpty(line)){
             line = "all";
         }
         paramsMap.put("arg0", line);
         Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
         Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
-        String result = WebServiceUtil.pushMethod(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
+        String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
         if(jsonObject.getString("resultCode").equals("00")){
@@ -90,30 +90,23 @@ public class WebServiceMetroController {
      * 线路为空则取全部
      * */
     @ResponseBody
-    @RequestMapping("/getHistoryConstructions ")
-    public JSONObject getHistoryConstructions (String line,Integer pageNum) {
-        Map<String, Object> paramsMap = new LinkedHashMap<>();
+    @RequestMapping("/getHistoryConstructions")
+    public JSONObject getHistoryConstructions (String line,String pageNum) {
+        Map<String, String> paramsMap = new LinkedHashMap<>();
         if(StringUtils.isNotEmpty(line)){
             line = "all";
         }
         paramsMap.put("arg0", line);
         paramsMap.put("arg1", pageNum);
-        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
-        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
-        String result = WebServiceUtil.pushMethod(JxfMonitor.REMOTE_ADDR, "getHistoryConstructions", paramsMap);
+        String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getHistoryConstructions", paramsMap);
         JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
         if(jsonObject.getString("resultCode").equals("00")){
             String jsonArrayStr1 = jsonObject.get("data").toString();
             List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
-            //解析
-            for (ConstructPlan constructPlan:constructPlanList){
-                if(constructPlan.getPlanStartTime()>=startTime && constructPlan.getPlanStartTime()<=endTime){
-                    alarmPlan.add(constructPlan);
-                }
-            }
+            return ResultJson.succResultJson(alarmPlan);
         }
-        return ResultJson.succResultJson(alarmPlan);
+        return ResultJson.errorResultJson("");
     }
 
     @ResponseBody
