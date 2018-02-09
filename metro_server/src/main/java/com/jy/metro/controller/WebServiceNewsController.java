@@ -52,6 +52,30 @@ public class WebServiceNewsController {
         jsonData.put("msg", "success");
         return jsonData;
     }
+
+    @ResponseBody
+    @RequestMapping("/getDataInfoList")
+    public JSONObject getDataInfoList(String pagenum, String pagesize) {
+        JSONObject jsonData = new JSONObject();
+        Map<String, Object> paramsMap = new LinkedHashMap<>();
+        paramsMap.put("user", "xxjsxt");
+        paramsMap.put("password", "BCE486DD650A4fb388403AC15250541B");
+        paramsMap.put("dataType", "xxjsPicNews");
+        paramsMap.put("pagenum", pagenum);
+        paramsMap.put("pagesize", pagesize);
+
+        String resultStr = WebServiceUtil.push("http://10.1.48.49:8088/wdservice/DataQuery_ST_Handler?wsdl", "getDataInfoList",paramsMap );
+        List<NewsEntity> newsEntityList = null;
+        if(!StringUtils.isEmpty(resultStr)){
+            newsEntityList = XmlParseUtil.readStringXml(resultStr);
+        }
+
+        jsonData.put("result", 1);
+        jsonData.put("data", newsEntityList);
+        jsonData.put("msg", "success");
+        return jsonData;
+    }
+
     @ResponseBody
     @RequestMapping("/getInfo")
     public JSONObject getInfo(){
