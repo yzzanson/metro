@@ -25,10 +25,10 @@ public class WebServiceUtil {
 
     private static Logger logger = LoggerFactory.getLogger(WebServiceUtil.class);
 
-    public static String push(String webServiceUrl, String method, Map<String, Object> paramsMap){
+    public static String push(String webServiceUrl, String method, Map<String, Object> paramsMap) throws Exception{
         String qName ="http://tempuri.org/";
         String result = null;
-        try {
+//        try {
             //直接引用远程的wsdl文件
             //以下都是套路
             Service service = new Service();
@@ -55,13 +55,13 @@ public class WebServiceUtil {
             result = (String)call.invoke(paramList.toArray());
 //            result = (String)call.invoke(new Object[]{"01",3});
 
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            logger.error(webServiceUrl + "RemoteException,", e);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            logger.error(webServiceUrl + "发送失败,", e);
-        }
+//        } catch (RemoteException e) {
+//            // TODO Auto-generated catch block
+//            logger.error(webServiceUrl + "RemoteException,", e);
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            logger.error(webServiceUrl + "发送失败,", e);
+//        }
         return result;
     }
 

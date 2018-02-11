@@ -34,19 +34,25 @@ public class WebServiceMetroController {
     public JSONObject getConstruction_test() {
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("arg0", "all");
-        String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
-        JSONObject jsonObject = JSONObject.parseObject(result);
+
         List<ConstructPlan> alarmPlan = new ArrayList<>();
-        if (jsonObject.getString("resultCode").equals("00")) {
-            String jsonArrayStr1 = jsonObject.get("data").toString();
-            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
-            //解析
-//            for (ConstructPlan constructPlan:constructPlanList){
-//                if(constructPlan.getPlanStartTime()>=startTime && constructPlan.getPlanStartTime()<=endTime){
-//                    alarmPlan.add(constructPlan);
-//                }
-//            }
-            alarmPlan = constructPlanList;
+        try {
+            String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            if (jsonObject.getString("resultCode").equals("00")) {
+                String jsonArrayStr1 = jsonObject.get("data").toString();
+                List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
+                //解析
+    //            for (ConstructPlan constructPlan:constructPlanList){
+    //                if(constructPlan.getPlanStartTime()>=startTime && constructPlan.getPlanStartTime()<=endTime){
+    //                    alarmPlan.add(constructPlan);
+    //                }
+    //            }
+                alarmPlan = constructPlanList;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultJson.errorResultJson("");
         }
         return ResultJson.succResultJson(alarmPlan);
     }
@@ -65,13 +71,19 @@ public class WebServiceMetroController {
         paramsMap.put("arg0", line);
 //        Long startTime = DateUtil.getStringDateFromDate(DateUtil.getBeforeDayStartDateTime(new Date()));
 //        Long endTime = DateUtil.getStringDateFromDate(DateUtil.getDateEndDateTime(new Date()));
-        String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
-        JSONObject jsonObject = JSONObject.parseObject(result);
         List<ConstructPlan> alarmPlan = new ArrayList<>();
-        if (jsonObject.getString("resultCode").equals("00")) {
-            String jsonArrayStr1 = jsonObject.get("data").toString();
-            alarmPlan = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
+        try {
+            String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getConstructions", paramsMap);
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            if (jsonObject.getString("resultCode").equals("00")) {
+                String jsonArrayStr1 = jsonObject.get("data").toString();
+                alarmPlan = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultJson.errorResultJson("");
         }
+
         return ResultJson.succResultJson(alarmPlan);
     }
 
@@ -89,13 +101,18 @@ public class WebServiceMetroController {
         }
         paramsMap.put("arg0", line);
         paramsMap.put("arg1", pageNum);
-        String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getHistoryConstructions", paramsMap);
-        JSONObject jsonObject = JSONObject.parseObject(result);
-        if (jsonObject.getString("resultCode").equals("00")) {
+        try {
+            String result = WebServiceUtil.push(JxfMonitor.REMOTE_ADDR, "getHistoryConstructions", paramsMap);
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            if (jsonObject.getString("resultCode").equals("00")) {
 //            String jsonArrayStr1 = jsonObject.get("data").toString();
 //            List<ConstructPlan> constructPlanList = ConstructPushJob.getListFromJsonArray(jsonArrayStr1);
-            return jsonObject;
+                return jsonObject;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return ResultJson.errorResultJson("");
     }
 

@@ -20,7 +20,12 @@ public class JxfMonitor {
     public static String casServer(String lineNumber) {
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("arg0", lineNumber);
-        return WebServiceUtil.push(REMOTE_ADDR, "getConstructions", paramsMap);
+        try {
+            return WebServiceUtil.push(REMOTE_ADDR, "getConstructions", paramsMap);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
